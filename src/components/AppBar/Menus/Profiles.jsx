@@ -31,9 +31,10 @@ const Profiles = () => {
                     aria-controls={open ? 'basic-menu-profiles' : undefined}
                     aria-haspopup="true"
                     aria-expanded={open ? 'true' : undefined}
+                    
                 >
                     <Avatar
-                        sx={{ width: 34, height: 34 }}
+                        sx={{ width: 36, height: 36 }}
                         src='https://vsmall.vn/wp-content/uploads/2024/06/909-hinh-anh-girl-xinh-dep-nhat-lam-hinh-nen-dien-thoai-pc-2.jpg'
                     />
                 </IconButton>

@@ -18,8 +18,9 @@ const MENU_STYLES = {
     '& .MuiSvgIcon-root': {
         color: 'primary.main'
     },
-    '&:hover': {
-        bgcolor: 'primary.50'
+    '&:hover,&:hover .MuiSvgIcon-root': {
+        bgcolor: 'primary.50',
+        color:'white'
     }
 }
 
@@ -36,7 +37,8 @@ const BoardBar = () => {
                 gap: 2,
                 paddingX: 2,
                 overflowX: 'auto',
-                borderTop: '1px solid #00bfa5'
+                bgcolor: (theme) => theme.palette.mode === 'dark' ? '#34495e' : '#1976d2', 
+                borderBottom: '1px solid #00bfa5'
             }}
         >
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
@@ -81,6 +83,10 @@ const BoardBar = () => {
                 <Button
                     variant='outlined'
                     startIcon={<PersonAddIcon />}
+                    sx={{
+                        color:'white',
+                        borderColor:'white',
+                    }}
                 >
                     Invite
                 </Button>
@@ -89,8 +95,8 @@ const BoardBar = () => {
                     max={6}
                     sx={{
                         '& .MuiAvatar-root': {
-                            width: 34,
-                            height: 34,
+                            width: 36,
+                            height: 36,
                             fontSize: '1rem'
                         }
                     }}
