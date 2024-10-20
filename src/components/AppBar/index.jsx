@@ -7,12 +7,12 @@ import Workspaces from './Menus/Workspaces';
 import Recent from './Menus/Recent';
 import Starred from './Menus/Starred';
 import Templates from './Menus/Templates';
-import AddIcon from '@mui/icons-material/Add';
 import Badge from '@mui/material/Badge';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import Tooltip from '@mui/material/Tooltip';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import Profiles from './Menus/Profiles';
+import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
 const AppBar = () => {
     return (
         <Box px={2} sx={{
@@ -21,8 +21,8 @@ const AppBar = () => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            gap:2,
-            overflowX:'auto',
+            gap: 2,
+            overflowX: 'auto',
         }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                 <AppsIcon sx={{ color: 'primary.main' }} />
@@ -43,15 +43,18 @@ const AppBar = () => {
                     <Recent />
                     <Starred />
                     <Templates />
-                    <Button variant='outlined'>
-                        <AddIcon />
+                    <Button
+                        variant='outlined'
+                        startIcon={<LibraryAddIcon />}
+                    >
+                        Create
                     </Button>
                 </Box>
 
 
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                <TextField id='outlined-search' label='Search...' type='search' size='small' sx={{minWidth:'120px'}}/>
+                <TextField id='outlined-search' label='Search...' type='search' size='small' sx={{ minWidth: '120px' }} />
                 <ModeSelect />
                 <Tooltip title="Notifications">
                     <Badge color="secondary" variant="dot" sx={{ cursor: 'pointer' }}>
