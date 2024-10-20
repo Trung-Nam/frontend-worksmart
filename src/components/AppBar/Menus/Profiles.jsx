@@ -33,7 +33,7 @@ const Profiles = () => {
                     aria-expanded={open ? 'true' : undefined}
                 >
                     <Avatar
-                        sx={{ width: 30, height: 30 }}
+                        sx={{ width: 34, height: 34 }}
                         src='https://vsmall.vn/wp-content/uploads/2024/06/909-hinh-anh-girl-xinh-dep-nhat-lam-hinh-nen-dien-thoai-pc-2.jpg'
                     />
                 </IconButton>
