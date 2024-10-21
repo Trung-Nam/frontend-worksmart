@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box';
-import ModeSelect from '~/components/ModeSelect';
+import ModeSelect from '~/components/ModeSelect/ModeSelect';
 import AppsIcon from '@mui/icons-material/Apps';
 import InsightsIcon from '@mui/icons-material/Insights';
 import { Button, InputAdornment, TextField, Typography } from '@mui/material';
