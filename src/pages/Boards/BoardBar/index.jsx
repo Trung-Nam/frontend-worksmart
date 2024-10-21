@@ -20,7 +20,7 @@ const MENU_STYLES = {
     },
     '&:hover,&:hover .MuiSvgIcon-root': {
         bgcolor: 'primary.50',
-        color:'white'
+        color: 'white'
     }
 }
 
@@ -37,7 +37,7 @@ const BoardBar = () => {
                 gap: 2,
                 paddingX: 2,
                 overflowX: 'auto',
-                bgcolor: (theme) => theme.palette.mode === 'dark' ? '#34495e' : '#1976d2', 
+                bgcolor: (theme) => theme.palette.mode === 'dark' ? '#34495e' : '#1976d2',
                 borderBottom: '1px solid #00bfa5'
             }}
         >
@@ -84,8 +84,8 @@ const BoardBar = () => {
                     variant='outlined'
                     startIcon={<PersonAddIcon />}
                     sx={{
-                        color:'white',
-                        borderColor:'white',
+                        color: 'white',
+                        borderColor: 'white',
                     }}
                 >
                     Invite
@@ -97,7 +97,12 @@ const BoardBar = () => {
                         '& .MuiAvatar-root': {
                             width: 36,
                             height: 36,
-                            fontSize: '1rem'
+                            fontSize: '1rem',
+                            cursor: 'pointer',
+                            color: 'white',
+                            '&:first-of-type': {
+                                bgcolor: '#a4b0be'
+                            }
                         }
                     }}
                 >
@@ -124,6 +129,18 @@ const BoardBar = () => {
                             alt="Agnes Walker"
                             src="https://top10tphcm.com/wp-content/uploads/2024/04/hinh-anh-gai-xinh-trung-quoc-dep-nhat-31.jpg"
 
+                        />
+                    </Tooltip>
+                    <Tooltip title='Trevor Henderson'>
+                        <Avatar
+                            alt="Trevor Henderson"
+                            src="https://i0.wp.com/thatnhucuocsong.com.vn/wp-content/uploads/2022/01/Hinh-nen-gai-xinh-Trung-Quoc.jpg?fit=373%2C560&ssl=1"
+                        />
+                    </Tooltip>
+                    <Tooltip title='Trevor Henderson'>
+                        <Avatar
+                            alt="Trevor Henderson"
+                            src="https://i0.wp.com/thatnhucuocsong.com.vn/wp-content/uploads/2022/01/Hinh-nen-gai-xinh-Trung-Quoc.jpg?fit=373%2C560&ssl=1"
                         />
                     </Tooltip>
                     <Tooltip title='Trevor Henderson'>
