@@ -17,8 +17,9 @@ import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import { useState } from 'react';
 import ListCards from './ListCards/ListCards';
+import { mapOrder } from '~/utils/sorts';
 
-const Column = () => {
+const Column = ({ column }) => {
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
@@ -27,6 +28,8 @@ const Column = () => {
     const handleClose = () => {
         setAnchorEl(null);
     };
+
+    const orderedCards = mapOrder(column?.cards, column?.cardOrderIds, '_id')
     return (
         <Box
             sx={{
@@ -59,7 +62,7 @@ const Column = () => {
                         fontSize: '1rem'
                     }}
                 >
-                    Column title
+                    {column?.title}
                 </Typography>
 
                 <Box>
@@ -141,7 +144,7 @@ const Column = () => {
             </Box>
 
             {/* list card */}
-            <ListCards />
+            <ListCards cards={orderedCards} />
 
             {/* Box column footer */}
             <Box
