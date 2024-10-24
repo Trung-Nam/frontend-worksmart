@@ -29,6 +29,7 @@ const Column = ({ column }) => {
         setNodeRef,
         transform,
         transition,
+        isDragging,
     } = useSortable({ id: column._id, data: { ...column } });
 
     const dndKitColumnStyles = {
@@ -39,6 +40,12 @@ const Column = ({ column }) => {
          */
         transform: CSS.Translate.toString(transform),
         transition,
+        /**
+         * Chiều cao phải luôn max 100% vì nếu không sẽ lỗi lúc kéo column ngắn qua một cái column dài thì phải kéo ở khu vực giữa rất khó chịu (demo ở video 32). 
+         * Lưu ý lúc này phải kết hợp với {...listeners} nằm ở Box chứ không phải ở div ngoài cùng để tránh trường hợp kéo vào vùng xanh.
+         */
+        height:'100%',
+        opacity: isDragging ? 0.5 : undefined,
     };
 
     const [anchorEl, setAnchorEl] = useState(null);
@@ -53,144 +60,147 @@ const Column = ({ column }) => {
     const orderedCards = mapOrder(column?.cards, column?.cardOrderIds, '_id')
 
     return (
-        <Box
-            ref={setNodeRef}
+        // Phải bọc div ở đây vì vấn đề chiều cao column khi thả sẽ có bug kiểu flickering
+        <div ref={setNodeRef}
             style={dndKitColumnStyles}
             {...attributes}
-            {...listeners}
-            sx={{
-                minWidth: '300px',
-                maxWidth: '300px',
-                bgcolor: (theme) => theme.palette.mode === 'dark' ? '#333643' : '#ebecf0',
-                ml: 2,
-                borderRadius: '6px',
-                height: 'fit-content',
-                maxHeight: (theme) => `calc(${theme.workSmart.boardContentHeight} - ${theme.spacing(5)})`,
-
-            }}
         >
-            {/* Box column header */}
             <Box
+                {...listeners}
                 sx={{
-                    height: (theme) => theme.workSmart.columnHeaderHeight,
-                    p: 2,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between'
+                    minWidth: '300px',
+                    maxWidth: '300px',
+                    bgcolor: (theme) => theme.palette.mode === 'dark' ? '#333643' : '#ebecf0',
+                    ml: 2,
+                    borderRadius: '6px',
+                    height: 'fit-content',
+                    maxHeight: (theme) => `calc(${theme.workSmart.boardContentHeight} - ${theme.spacing(5)})`,
+
                 }}
             >
-                <Typography
-                    variant='h6'
+                {/* Box column header */}
+                <Box
                     sx={{
-                        fontWeight: 'bold',
-                        cursor: 'pointer',
-                        fontSize: '1rem'
+                        height: (theme) => theme.workSmart.columnHeaderHeight,
+                        p: 2,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between'
                     }}
                 >
-                    {column?.title}
-                </Typography>
-
-                <Box>
-                    <Tooltip title="More options">
-                        <MoreHorizIcon
-                            sx={{
-                                color: 'text.primary',
-                                cursor: 'pointer'
-                            }}
-                            id="basic-column-dropdown"
-                            aria-controls={open ? 'basic-menu-column-dropdown' : undefined}
-                            aria-haspopup="true"
-                            aria-expanded={open ? 'true' : undefined}
-                            onClick={handleClick}
-                        />
-                    </Tooltip>
-
-                    <Menu
-                        id="basic-menu-column-dropdown"
-                        MenuListProps={{
-                            'aria-labelledby': 'basic-column-dropdown',
+                    <Typography
+                        variant='h6'
+                        sx={{
+                            fontWeight: 'bold',
+                            cursor: 'pointer',
+                            fontSize: '1rem'
                         }}
-                        anchorEl={anchorEl}
-                        open={open}
-                        onClose={handleClose}
-                        TransitionComponent={Fade}
                     >
-                        <MenuItem>
-                            <ListItemIcon>
-                                <PlaylistAddIcon fontSize="small" />
-                            </ListItemIcon>
-                            <ListItemText>Add new card</ListItemText>
-                            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                                ⌘N
-                            </Typography>
-                        </MenuItem>
-                        <MenuItem>
-                            <ListItemIcon>
-                                <ContentCut fontSize="small" />
-                            </ListItemIcon>
-                            <ListItemText>Cut</ListItemText>
-                            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                                ⌘X
-                            </Typography>
-                        </MenuItem>
-                        <MenuItem>
-                            <ListItemIcon>
-                                <ContentCopy fontSize="small" />
-                            </ListItemIcon>
-                            <ListItemText>Copy</ListItemText>
-                            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                                ⌘C
-                            </Typography>
-                        </MenuItem>
-                        <MenuItem>
-                            <ListItemIcon>
-                                <ContentPaste fontSize="small" />
-                            </ListItemIcon>
-                            <ListItemText>Paste</ListItemText>
-                            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                                ⌘V
-                            </Typography>
-                        </MenuItem>
-                        <Divider />
-                        <MenuItem>
-                            <ListItemIcon>
-                                <PlaylistRemoveIcon fontSize="small" />
-                            </ListItemIcon>
-                            <ListItemText>Remove this column</ListItemText>
-                        </MenuItem>
-                        <MenuItem>
-                            <ListItemIcon>
-                                <Cloud fontSize="small" />
-                            </ListItemIcon>
-                            <ListItemText>Archive this column</ListItemText>
-                        </MenuItem>
-                    </Menu>
+                        {column?.title}
+                    </Typography>
+
+                    <Box>
+                        <Tooltip title="More options">
+                            <MoreHorizIcon
+                                sx={{
+                                    color: 'text.primary',
+                                    cursor: 'pointer'
+                                }}
+                                id="basic-column-dropdown"
+                                aria-controls={open ? 'basic-menu-column-dropdown' : undefined}
+                                aria-haspopup="true"
+                                aria-expanded={open ? 'true' : undefined}
+                                onClick={handleClick}
+                            />
+                        </Tooltip>
+
+                        <Menu
+                            id="basic-menu-column-dropdown"
+                            MenuListProps={{
+                                'aria-labelledby': 'basic-column-dropdown',
+                            }}
+                            anchorEl={anchorEl}
+                            open={open}
+                            onClose={handleClose}
+                            TransitionComponent={Fade}
+                        >
+                            <MenuItem>
+                                <ListItemIcon>
+                                    <PlaylistAddIcon fontSize="small" />
+                                </ListItemIcon>
+                                <ListItemText>Add new card</ListItemText>
+                                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                                    ⌘N
+                                </Typography>
+                            </MenuItem>
+                            <MenuItem>
+                                <ListItemIcon>
+                                    <ContentCut fontSize="small" />
+                                </ListItemIcon>
+                                <ListItemText>Cut</ListItemText>
+                                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                                    ⌘X
+                                </Typography>
+                            </MenuItem>
+                            <MenuItem>
+                                <ListItemIcon>
+                                    <ContentCopy fontSize="small" />
+                                </ListItemIcon>
+                                <ListItemText>Copy</ListItemText>
+                                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                                    ⌘C
+                                </Typography>
+                            </MenuItem>
+                            <MenuItem>
+                                <ListItemIcon>
+                                    <ContentPaste fontSize="small" />
+                                </ListItemIcon>
+                                <ListItemText>Paste</ListItemText>
+                                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                                    ⌘V
+                                </Typography>
+                            </MenuItem>
+                            <Divider />
+                            <MenuItem>
+                                <ListItemIcon>
+                                    <PlaylistRemoveIcon fontSize="small" />
+                                </ListItemIcon>
+                                <ListItemText>Remove this column</ListItemText>
+                            </MenuItem>
+                            <MenuItem>
+                                <ListItemIcon>
+                                    <Cloud fontSize="small" />
+                                </ListItemIcon>
+                                <ListItemText>Archive this column</ListItemText>
+                            </MenuItem>
+                        </Menu>
+                    </Box>
                 </Box>
+
+                {/* list card */}
+                <ListCards cards={orderedCards} />
+
+                {/* Box column footer */}
+                <Box
+                    sx={{
+                        height: (theme) => theme.workSmart.columnFooterHeight,
+                        p: 2,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between'
+                    }}
+                >
+                    <Button sx={{
+                        color: (theme) => theme.palette.mode === 'dark' ? 'white' : 'primary.main'
+                    }} startIcon={<PlaylistAddIcon />}>Add new card</Button>
+
+                    <Tooltip title="Drag to move">
+                        <DragHandleIcon sx={{ cursor: 'pointer' }} />
+                    </Tooltip>
+                </Box>
+
             </Box>
-
-            {/* list card */}
-            <ListCards cards={orderedCards} />
-
-            {/* Box column footer */}
-            <Box
-                sx={{
-                    height: (theme) => theme.workSmart.columnFooterHeight,
-                    p: 2,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between'
-                }}
-            >
-                <Button sx={{
-                    color: (theme) => theme.palette.mode === 'dark' ? 'white' : 'primary.main'
-                }} startIcon={<PlaylistAddIcon />}>Add new card</Button>
-
-                <Tooltip title="Drag to move">
-                    <DragHandleIcon sx={{ cursor: 'pointer' }} />
-                </Tooltip>
-            </Box>
-
-        </Box>
+        </div>
     )
 }
 
