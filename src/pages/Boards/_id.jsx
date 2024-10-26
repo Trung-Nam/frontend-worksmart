@@ -4,7 +4,7 @@ import { Container } from '@mui/material';
 import AppBar from '~/components/AppBar/AppBar';
 import BoardBar from '~/pages/Boards/BoardBar/BoardBar';
 import BoardContent from '~/pages/Boards/BoardContent/BoardContent';
-// import { mockData } from '~/apis/mock-data';
+import { mockData } from '~/apis/mock-data';
 import { fetchBoardDetailsAPI } from '~/apis';
 
 const Board = () => {
@@ -14,15 +14,14 @@ const Board = () => {
         const boardId = '671ccdecbc3c71d61393ba56';
         fetchBoardDetailsAPI(boardId).then((board) => {
             setBoard(board);
-            console.log(board);
         })
     }, []);
 
     return (
         <Container disableGutters maxWidth={false} sx={{ height: '100vh' }}>
             <AppBar />
-            <BoardBar board={board} />
-            <BoardContent board={board} />
+            <BoardBar board={mockData.board} />
+            <BoardContent board={mockData.board} />
         </Container>
     )
 }
