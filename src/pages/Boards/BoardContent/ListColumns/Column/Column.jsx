@@ -6,7 +6,7 @@ import DragHandleIcon from '@mui/icons-material/DragHandle';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
-import { Button, Tooltip } from '@mui/material';
+import { Button, TextField, Tooltip } from '@mui/material';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import Fade from '@mui/material/Fade';
@@ -44,7 +44,7 @@ const Column = ({ column }) => {
          * Chiều cao phải luôn max 100% vì nếu không sẽ lỗi lúc kéo column ngắn qua một cái column dài thì phải kéo ở khu vực giữa rất khó chịu (demo ở video 32). 
          * Lưu ý lúc này phải kết hợp với {...listeners} nằm ở Box chứ không phải ở div ngoài cùng để tránh trường hợp kéo vào vùng xanh.
          */
-        height:'100%',
+        height: '100%',
         opacity: isDragging ? 0.5 : undefined,
     };
 
@@ -58,6 +58,24 @@ const Column = ({ column }) => {
     };
 
     const orderedCards = mapOrder(column?.cards, column?.cardOrderIds, '_id')
+
+
+    const [openNewCardForm, setOpenNewCardForm] = useState();
+    const toggleOpenNewCardForm = () => setOpenNewCardForm(!openNewCardForm);
+
+    const [newCardTitle, setNewCardTitle] = useState('');
+
+    const addNewCard = () => {
+        if (!newCardTitle) {
+            // console.log('Please enter Card title!');
+            return;
+        }
+        // Gọi API
+
+        toggleOpenNewCardForm();
+        setNewCardTitle('');
+    }
+
 
     return (
         // Phải bọc div ở đây vì vấn đề chiều cao column khi thả sẽ có bug kiểu flickering
@@ -184,19 +202,108 @@ const Column = ({ column }) => {
                 <Box
                     sx={{
                         height: (theme) => theme.workSmart.columnFooterHeight,
-                        p: 2,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between'
+                        p: 1.2,
                     }}
                 >
-                    <Button sx={{
-                        color: (theme) => theme.palette.mode === 'dark' ? 'white' : 'primary.main'
-                    }} startIcon={<PlaylistAddIcon />}>Add new card</Button>
+                    {!openNewCardForm
+                        ? <Box
+                            sx={{
+                                height: '100%',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                            }}>
+                            <Button
+                                sx={{
+                                    color: (theme) => theme.palette.mode === 'dark' ? 'white' : 'primary.main'
+                                }}
+                                startIcon={<PlaylistAddIcon />}
+                                onClick={toggleOpenNewCardForm}
+                            >
+                                Add new card
+                            </Button>
+                            <Tooltip title="Drag to move">
+                                <DragHandleIcon sx={{ cursor: 'pointer' }} />
+                            </Tooltip>
+                        </Box>
+                        : <Box
+                            sx={{
+                                height: '100%',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: 1
+                            }}
+                        >
+                            
+                            <TextField
+                                label='Enter card title...'
+                                type='text'
+                                size='small'
+                                variant='outlined'
+                                autoFocus
+                                fullWidth
+                                value={newCardTitle}
+                                onChange={(e) => setNewCardTitle(e.target.value)}
+                                sx={{
+                                    '& label': { color: 'text.primary' },
+                                    '& input': {
+                                        color: (theme) => theme.palette.mode === 'dark' ? 'white' : 'primary.main',
+                                        bgcolor: (theme) => (theme.palette.mode === 'dark' ? '#333643' : 'white')
+                                    },
+                                    'label.Mui-focused': { color: (theme) => theme.palette.mode === 'dark' ? 'white' : 'primary.main' },
+                                    '& .MuiOutlinedInput-root': {
+                                        '& fieldset': { borderColor: (theme) => theme.palette.mode === 'dark' ? 'white' : 'primary.main' },
+                                        '&:hover fieldset': { borderColor: (theme) => theme.palette.mode === 'dark' ? 'white' : 'primary.main' },
+                                        '&.Mui-focused fieldset': { borderColor: (theme) => theme.palette.mode === 'dark' ? 'white' : 'primary.main' }
+                                    },
+                                    '& .MuiOutlinedInput-input': {
+                                        borderRadius: 1
+                                    }
+                                }}
+                            />
 
-                    <Tooltip title="Drag to move">
-                        <DragHandleIcon sx={{ cursor: 'pointer' }} />
-                    </Tooltip>
+                            <Box
+                                sx={{
+                                    width: '100%',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: 1
+                                }}
+                            >
+                                <Button
+                                    onClick={addNewCard}
+                                    variant='contained'
+                                    color='success'
+                                    size='small'
+                                    sx={{
+                                        color:'white',
+                                        boxShadow: 'none',
+                                        border: '0.5px solid',
+                                        borderColor: (theme) => theme.palette.success.main,
+                                        '&:hover': { bgcolor: (theme) => theme.palette.success.main }
+                                    }}
+                                >
+                                    Add
+                                </Button>
+
+                                <Button
+                                    variant='contained'
+                                    color='error'
+                                    size='small'
+                                    sx={{
+                                        boxShadow: 'none',
+                                        border: '0.5px solid',
+                                        borderColor: (theme) => theme.palette.error.main,
+                                    }}
+                                    onClick={toggleOpenNewCardForm}
+                                >
+                                    Cancel
+                                </Button>
+                            </Box>
+                        </Box>
+                    }
+
+
                 </Box>
 
             </Box>
