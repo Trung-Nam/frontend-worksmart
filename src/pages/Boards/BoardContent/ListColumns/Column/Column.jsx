@@ -21,6 +21,7 @@ import { mapOrder } from '~/utils/sorts';
 
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { toast } from 'react-toastify';
 
 const Column = ({ column }) => {
     const {
@@ -67,7 +68,7 @@ const Column = ({ column }) => {
 
     const addNewCard = () => {
         if (!newCardTitle) {
-            // console.log('Please enter Card title!');
+            toast.error('Please enter Card title!',{position:'bottom-right'});
             return;
         }
         // Gọi API
