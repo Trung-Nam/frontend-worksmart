@@ -23,7 +23,7 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { toast } from 'react-toastify';
 
-const Column = ({ column }) => {
+const Column = ({ column, createNewCard }) => {
     const {
         attributes,
         listeners,
@@ -66,12 +66,19 @@ const Column = ({ column }) => {
 
     const [newCardTitle, setNewCardTitle] = useState('');
 
-    const addNewCard = () => {
+    const addNewCard = async () => {
         if (!newCardTitle) {
-            toast.error('Please enter Card title!',{position:'bottom-right'});
+            toast.error('Please enter Card title!', { position: 'bottom-right' });
             return;
         }
+
+        // Tạo dữ liệu Card để gọi api
+        const newCardData = {
+            title: newCardTitle,
+            columnId:column._id
+        }
         // Gọi API
+        await createNewCard(newCardData);
 
         toggleOpenNewCardForm();
         setNewCardTitle('');
@@ -235,7 +242,7 @@ const Column = ({ column }) => {
                                 gap: 1
                             }}
                         >
-                            
+
                             <TextField
                                 label='Enter card title...'
                                 type='text'
@@ -278,7 +285,7 @@ const Column = ({ column }) => {
                                     color='success'
                                     size='small'
                                     sx={{
-                                        color:'white',
+                                        color: 'white',
                                         boxShadow: 'none',
                                         border: '0.5px solid',
                                         borderColor: (theme) => theme.palette.success.main,
