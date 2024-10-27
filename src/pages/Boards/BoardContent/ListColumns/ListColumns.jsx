@@ -4,6 +4,7 @@ import { Button, TextField } from '@mui/material';
 import ViewColumnIcon from '@mui/icons-material/ViewColumn';
 import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 
 const ListColumns = ({ columns }) => {
     const [openNewColumnForm, setOpenNewColumnForm] = useState();
@@ -13,7 +14,7 @@ const ListColumns = ({ columns }) => {
 
     const addNewColumn = () => {
         if (!newColumnTitle) {
-            // console.log('Please enter column title!');
+            toast.error('Please enter column title!');
             return;
         }
         // Gọi API
