@@ -264,10 +264,10 @@ const BoardContent = ({ board, createNewColumn, createNewCard, moveColumns }) =>
                 // Dùng arrayMove của thằng dnd-kit để sắp xếp lại mảng Column ban đầu
                 const dndOrderedColumns = arrayMove(orderedColumns, oldColmunIndex, newColumnIndex);
 
-                moveColumns(dndOrderedColumns)
-
                 // Vẫn gọi update state ở đây để tránh delay or flickering giao diện lúc kéo thả cần phải chờ gọi API (small trick)
                 setOrderedColumns(dndOrderedColumns);
+
+                moveColumns(dndOrderedColumns)
             }
         }
         // Những dữ liệu sau khi kéo thả này luôn phải đưa về giá trị null mặc định ban đầu

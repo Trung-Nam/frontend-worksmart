@@ -66,7 +66,7 @@ const Column = ({ column, createNewCard }) => {
 
     const [newCardTitle, setNewCardTitle] = useState('');
 
-    const addNewCard = async () => {
+    const addNewCard = () => {
         if (!newCardTitle) {
             toast.error('Please enter Card title!', { position: 'bottom-right' });
             return;
@@ -75,10 +75,10 @@ const Column = ({ column, createNewCard }) => {
         // Tạo dữ liệu Card để gọi api
         const newCardData = {
             title: newCardTitle,
-            columnId:column._id
+            columnId: column._id
         }
         // Gọi API
-        await createNewCard(newCardData);
+        createNewCard(newCardData);
 
         toggleOpenNewCardForm();
         setNewCardTitle('');

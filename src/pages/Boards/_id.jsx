@@ -59,7 +59,7 @@ const Board = () => {
         setBoard(newBoard);
     }
     // Func có nhiệm vụ gọi api và xử lý khi kéo thả column xong xuôi
-    const moveColumns = async (dndOrderedColumns) => {
+    const moveColumns = (dndOrderedColumns) => {
         const dndOrderedColumnsIds = dndOrderedColumns.map(c => c._id);
 
         const newBoard = { ...board }
@@ -68,7 +68,7 @@ const Board = () => {
         setBoard(newBoard);
 
         // Gọi api update board
-        await updateBoardDetailsAPI(newBoard._id, { columnOrderIds: dndOrderedColumnsIds });
+        updateBoardDetailsAPI(newBoard._id, { columnOrderIds: dndOrderedColumnsIds });
 
     }
 
