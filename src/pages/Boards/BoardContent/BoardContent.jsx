@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Box from '@mui/material/Box';
 import ListColumns from './ListColumns/ListColumns';
-import { mapOrder } from '~/utils/sorts';
+
 import {
     DndContext,
     // PointerSensor,
@@ -31,7 +31,7 @@ const ACTIVE_DRAG_ITEM_TYPE = {
     CARD: 'ACTIVE_DRAG_ITEM_TYPE_CARD'
 }
 
-const BoardContent = ({ board, createNewColumn, createNewCard, moveColumns }) => {
+const BoardContent = ({ board, createNewColumn, createNewCard, moveColumns, moveCardInSameColumn }) => {
     // https://docs.dndkit.com/api-documentation/sensors
     // Nếu dùng pointerSensor mặc định thì phải kết hợp thuộc tính CSS touch-action: none ở những phần tử kéo thả
     // Nhưng mà còn bug
@@ -56,7 +56,8 @@ const BoardContent = ({ board, createNewColumn, createNewCard, moveColumns }) =>
     const lastOverId = useRef(null);
 
     useEffect(() => {
-        setOrderedColumns(mapOrder(board?.columns, board?.columnOrderIds, '_id'))
+        // Column đã được sắp xếp ở component cha cao nhất (boards/_id.jsx)
+        setOrderedColumns(board.columns)
     }, [board])
 
     // Tìm Column theo cardId
@@ -230,7 +231,7 @@ const BoardContent = ({ board, createNewColumn, createNewCard, moveColumns }) =>
 
                 // Dùng arrayMove vì kéo card trong 1 cái column thì tương tự với logic kéo column trong 1 cái board content
                 const dndOrderedCards = arrayMove(oldColumnWhenDraggingCard?.cards, oldCardIndex, newCardIndex);
-
+                const dndOrderedCardsIds = dndOrderedCards.map(card => card._id);
 
                 setOrderedColumns(prevColumns => {
                     // Clone mảng OrderedColumnsState cũ ra một cái mới để xử lý data rồi return – cập nhật lại OrderedColumnsState mới
@@ -241,11 +242,13 @@ const BoardContent = ({ board, createNewColumn, createNewCard, moveColumns }) =>
 
                     //Cập nhật lại 2 giá trị mới là card và cardOderIds trong cái targetColumn'
                     targetColumn.cards = dndOrderedCards;
-                    targetColumn.cardOrderIds = dndOrderedCards.map(card => card._id);
+                    targetColumn.cardOrderIds = dndOrderedCardsIds;
 
                     // Trả về giá trị state mới (chuẩn vị trí)
                     return nextColumns;
                 })
+
+                moveCardInSameColumn(dndOrderedCards, dndOrderedCardsIds, oldColumnWhenDraggingCard._id);
 
             }
 
