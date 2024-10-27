@@ -242,6 +242,7 @@ const Column = ({ column }) => {
                                 variant='outlined'
                                 autoFocus
                                 fullWidth
+                                data-no-dnd="true"
                                 value={newCardTitle}
                                 onChange={(e) => setNewCardTitle(e.target.value)}
                                 sx={{
