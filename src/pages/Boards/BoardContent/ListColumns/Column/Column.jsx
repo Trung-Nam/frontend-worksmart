@@ -21,8 +21,9 @@ import ListCards from './ListCards/ListCards';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { toast } from 'react-toastify';
+import { useConfirm } from "material-ui-confirm";
 
-const Column = ({ column, createNewCard }) => {
+const Column = ({ column, createNewCard,deleteColumnDetails }) => {
     const {
         attributes,
         listeners,
@@ -84,6 +85,26 @@ const Column = ({ column, createNewCard }) => {
         setNewCardTitle('');
     }
 
+    // Xử lý xóa 1 column và cards bên trong nó
+    const confirmDeleteColumn = useConfirm();
+    const handleDeleteColumn = () => {
+        confirmDeleteColumn({
+            title: 'Delete Column ?',
+            description: "This action will permanently delete your Column and its Cards! Are you sure ?",
+            confirmationText: "Confirm",
+            cancellationText: "Cancel",
+            // confirmationButtonProps: { color: 'error', variant: 'outlined' },
+            // cancelButtonProps: { color: 'inherit'},
+            // allowClose:false
+        })
+            .then(() => {
+                deleteColumnDetails(column._id);
+            })
+            .catch(() => {
+                /* ... */
+            });
+    }
+
 
     return (
         // Phải bọc div ở đây vì vấn đề chiều cao column khi thả sẽ có bug kiểu flickering
@@ -143,14 +164,15 @@ const Column = ({ column, createNewCard }) => {
                         <Menu
                             id="basic-menu-column-dropdown"
                             MenuListProps={{
-                                'aria-labelledby': 'basic-column-dropdown',
+                                'aria-labelledby': 'basic-column-dropdown'
                             }}
                             anchorEl={anchorEl}
                             open={open}
                             onClose={handleClose}
+                            onClick={handleClose}
                             TransitionComponent={Fade}
                         >
-                            <MenuItem>
+                            <MenuItem onClick={toggleOpenNewCardForm}>
                                 <ListItemIcon>
                                     <PlaylistAddIcon fontSize="small" />
                                 </ListItemIcon>
@@ -187,9 +209,14 @@ const Column = ({ column, createNewCard }) => {
                                 </Typography>
                             </MenuItem>
                             <Divider />
-                            <MenuItem>
+                            <MenuItem
+                                onClick={handleDeleteColumn}
+                                sx={{
+                                    color: 'red'
+                                }}
+                            >
                                 <ListItemIcon>
-                                    <PlaylistRemoveIcon fontSize="small" />
+                                    <PlaylistRemoveIcon fontSize="small" sx={{ color: 'red' }} />
                                 </ListItemIcon>
                                 <ListItemText>Remove this column</ListItemText>
                             </MenuItem>
