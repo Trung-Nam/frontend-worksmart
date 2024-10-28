@@ -17,7 +17,6 @@ import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import { useState } from 'react';
 import ListCards from './ListCards/ListCards';
-import { mapOrder } from '~/utils/sorts';
 
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
@@ -58,7 +57,8 @@ const Column = ({ column, createNewCard }) => {
         setAnchorEl(null);
     };
 
-    const orderedCards = mapOrder(column?.cards, column?.cardOrderIds, '_id')
+    // Card đã được sắp xếp ở component cha cao nhất (boards/_id.jsx)
+    const orderedCards = column.cards;
 
 
     const [openNewCardForm, setOpenNewCardForm] = useState();
@@ -66,7 +66,7 @@ const Column = ({ column, createNewCard }) => {
 
     const [newCardTitle, setNewCardTitle] = useState('');
 
-    const addNewCard = async () => {
+    const addNewCard = () => {
         if (!newCardTitle) {
             toast.error('Please enter Card title!', { position: 'bottom-right' });
             return;
@@ -75,10 +75,10 @@ const Column = ({ column, createNewCard }) => {
         // Tạo dữ liệu Card để gọi api
         const newCardData = {
             title: newCardTitle,
-            columnId:column._id
+            columnId: column._id
         }
         // Gọi API
-        await createNewCard(newCardData);
+        createNewCard(newCardData);
 
         toggleOpenNewCardForm();
         setNewCardTitle('');
