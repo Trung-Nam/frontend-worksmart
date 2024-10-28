@@ -6,10 +6,11 @@ import AppBar from '~/components/AppBar/AppBar';
 import BoardBar from '~/pages/Boards/BoardBar/BoardBar';
 import BoardContent from '~/pages/Boards/BoardContent/BoardContent';
 // import { mockData } from '~/apis/mock-data';
-import { createNewCardAPI, createNewColumnAPI, fetchBoardDetailsAPI, moveCardToDifferentColumnAPI, updateBoardDetailsAPI, updateColumnDetailsAPI } from '~/apis';
+import { createNewCardAPI, createNewColumnAPI, deleteColumnDetailsAPI, fetchBoardDetailsAPI, moveCardToDifferentColumnAPI, updateBoardDetailsAPI, updateColumnDetailsAPI } from '~/apis';
 import { isEmpty } from 'lodash';
 import { generatePlaceHolderCard } from '~/utils/formatters';
 import { mapOrder } from '~/utils/sorts';
+import { toast } from 'react-toastify';
 
 const Board = () => {
     const [board, setBoard] = useState(null);
@@ -133,6 +134,21 @@ const Board = () => {
         })
     }
 
+    // Xử lý xóa Column và Cards bên trong nó
+    const deleteColumnDetails = (columnId) => {
+        // Update cho chuẩn dữ liệu state board
+
+        const newBoard = { ...board }
+        newBoard.columns = newBoard.columns.filter(column => column._id !== columnId);
+        newBoard.columnOrderIds = newBoard.columnOrderIds.filter(_id => _id !== columnId);
+        setBoard(newBoard);
+
+        // API
+        deleteColumnDetailsAPI(columnId).then((response) => {
+            toast.success(response?.deleteResult);
+        });
+    }
+
     if (!board) {
         return (
             <Box
@@ -162,6 +178,7 @@ const Board = () => {
                 moveColumns={moveColumns}
                 moveCardInSameColumn={moveCardInSameColumn}
                 moveCardToDifferentColumn={moveCardToDifferentColumn}
+                deleteColumnDetails={deleteColumnDetails}
             />
         </Container>
     )
