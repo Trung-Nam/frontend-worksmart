@@ -4,8 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "dev": "cross-env BUILD_MODE=dev vite",
+    "build": "cross-env BUILD_MODE=production vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
