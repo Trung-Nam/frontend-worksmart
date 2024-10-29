@@ -1,9 +1,10 @@
 
 let apiRoot = '';
-if (import.meta.env.MODE === 'development') {
+
+if (import.meta.env.DEV === true) {
     apiRoot = 'http://localhost:8017';
 }
-if (import.meta.env.MODE === 'production') {
+if (import.meta.env.PROD === true) {
     apiRoot = 'https://backend-worksmart.onrender.com';
 }
 
